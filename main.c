@@ -1,11 +1,11 @@
 #include <stdio.h>
+#include <stdlib.h>
 #include "main.h"
 
 int main(){
-
-    ndcToViewport(-1.0, -1.0, 1.0, 1.0);
-
-    printf("Hello World");
+    int numPontos;
+    float** matPontos = carregarPontos("trianguloNDC.dcg", &numPontos);
+    //ndcToViewport(-1.0, -1.0, 1.0, 1.0);
 }
 
 void ndcToViewport(float x1, float y1, float x2, float y2){
@@ -16,4 +16,21 @@ void ndcToViewport(float x1, float y1, float x2, float y2){
     ya = HEIGHT * ((-y1 + 1)/2);
     yb = HEIGHT * ((-y2 + 1)/2);
     printf("Valores dispositivo: xa: %d, ya: %d, xb: %d, yb: %d\n", xa, ya, xb, yb);
+}
+
+float** carregarPontos(char* arq, int* numPontos){
+    FILE *f = fopen(arq, "r");
+
+    fscanf(f, "%d", numPontos);
+    float** matPontos;
+
+    matPontos = (float**)malloc(*numPontos * sizeof(float*));
+
+    for(int i = 0; i < *numPontos; i++){
+        matPontos[i] = (float*)malloc(2 * sizeof(float));
+        fscanf(f, "%f", &matPontos[i][0]);
+        fscanf(f, "%f", &matPontos[i][1]);
+    }
+
+    return matPontos;
 }
