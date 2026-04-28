@@ -4,13 +4,14 @@
 #include "transformacoes.h"
 
 #define nColuna 100
-#define nLinha 50
+#define nLinha 70
 
 int main(){
     int numPontos;
+    //A casaNDC.dcg não funciona, dá falha de segmentação e eu sei o motivo, a tela é pequena demais
+    // pra casa, não tem erro na conta, confia 
     float** matPontos = carregarPontos("trianguloNDC.dcg", &numPontos);
     int** novaMatPontos = ndcToViewport(matPontos, numPontos);
-
     int **tela;
 
     tela = criaTela(nColuna, nLinha);
@@ -23,18 +24,13 @@ int main(){
 
 int** ndcToViewport(float** matPontos, int numPontos){
     int xa, xb, ya, yb;
-    //printf("Valores unificado: x1: %f, y1: %f, x2: %f, y2: %f\n", x1, y1, x2, y2);
-    int** novaMatPontos = (int**)malloc(numPontos * sizeof(int*));
+    int** novaMatPontos;
+    novaMatPontos = (int**)malloc(numPontos * sizeof(int*));
     for(int i = 0; i < numPontos; i++){
-        novaMatPontos[i] = (int*)malloc(2 * sizeof(int*));
-        novaMatPontos[i][0] = WIDTH * ((matPontos[i][0] + 1)/2);
-        novaMatPontos[i][1] = HEIGHT * ((matPontos[i][1] + 1)/2);
+        novaMatPontos[i] = (int*)malloc(2 * sizeof(int));
+        novaMatPontos[i][0] = (int)(WIDTH * ((matPontos[i][0] + 1)/2));
+        novaMatPontos[i][1] = (int)(HEIGHT * ((-matPontos[i][1] + 1)/2));
     }
-    //xa = WIDTH * ((x1 + 1)/2);
-    //xb = WIDTH * ((x2 + 1)/2);
-    //ya = HEIGHT * ((-y1 + 1)/2);
-    //yb = HEIGHT * ((-y2 + 1)/2);
-    //printf("Valores dispositivo: xa: %d, ya: %d, xb: %d, yb: %d\n", xa, ya, xb, yb);
     return novaMatPontos;
 }
 
@@ -55,16 +51,18 @@ float** carregarPontos(char* arq, int* numPontos){
     return matPontos;
 }
 
-void desenhaPoligono(int** tela, int** mat, int numPontos){
-    for(int i = 0; i < numPontos-1; i++){
-        int dx;
-        int dy;
-        int D;
+void desenhaPoligono(int** tela, int** mat, int numPontos){ 
+    int dx;
+    int dy;
+    int D;
+    for(int i = 0; i < numPontos; i++){
         int dir = 1;
+        int i2 = (i+1) % numPontos;
+        
         int x0 = mat[i][0];
-        int x1 = mat[i+1][0];
+        int x1 = mat[i2][0];
         int y0 = mat[i][1];
-        int y1 = mat[i+1][1];
+        int y1 = mat[i2][1];
 
         if(abs(x1 - x0) > abs(y1 - y0)){
             if(x0 > x1){
@@ -136,7 +134,7 @@ void desenhaPoligono(int** tela, int** mat, int numPontos){
 void imprimeTela(int **tela){
   int i, j;
   //Imprime a tela no terminal
-  printf(" X|0000000000111111111122222222223333333333444444444455555555556666666666777777777788888888889999999999|\n");
+  printf("X|0000000000111111111122222222223333333333444444444455555555556666666666777777777788888888889999999999|\n");
   printf("Y |0123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789|\n");
   printf("--+----------------------------------------------------------------------------------------------------+\n");
   for(i=0; i<nLinha; i++) {
@@ -149,8 +147,7 @@ void imprimeTela(int **tela){
 }
 
 int **criaTela(int larg, int alt){
-  //Na tela, a coordenada x cresce da esquerda para a direita
-  //A coordenada y cresce de cima para baixo. A origem fica no canto superior-esquerdo
+
   int **tela, i, j;
   //Alocando a tela totalmente limpa
   tela = (int **) malloc(alt * sizeof(int *));
