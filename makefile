@@ -1,11 +1,13 @@
 all: compila
 
-compila: main.o
-	gcc main.o -o prog
+compila: main.o transformacoes.o
+	gcc main.o transformacoes.o -o prog
 
 main.o: main.c
 	gcc -c main.c
+transformacoes.o: transformacoes.c
+	gcc -c transformacoes.c
 rm:
-	rm main.o prog
+	rm main.o transformacoes.o prog
 del: 
-	del main.o prog
+	del main.o transformacoes.o prog
