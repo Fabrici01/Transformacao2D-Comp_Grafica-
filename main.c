@@ -15,10 +15,96 @@ int main(){
     int **tela;
 
     tela = criaTela(nColuna, nLinha);
-    desenhaPoligono(tela, novaMatPontos, numPontos);    
-    if(tela != NULL)  imprimeTela(tela);
-    else printf("Frame não aceito\n");
+    desenhaPoligono(tela, novaMatPontos, numPontos);  
+    
+    // for(int i = 0; i < numPontos; i++){
+    //     translacao(0.3, 0.4, &matPontos[i][0], &matPontos[i][1]);
+    // }
 
+    // novaMatPontos = ndcToViewport(matPontos, numPontos);
+    // desenhaPoligono(tela, novaMatPontos, numPontos);  
+
+    // for(int i = 0; i < numPontos; i++){
+    //    escala(0.2, 0.2, &matPontos[i][0], &matPontos[i][1]);
+    // }
+
+    novaMatPontos = ndcToViewport(matPontos, numPontos);
+    desenhaPoligono(tela, novaMatPontos, numPontos); 
+
+    imprimeTela(tela);
+    if(tela != NULL){
+        while (1){
+            char key_code;
+            key_code = getchar();
+            if(key_code == '+'){
+                for(int i = 0; i < numPontos; i++){
+                    escala(1.5, 1.5, &matPontos[i][0], &matPontos[i][1]);
+                }
+                system("clear");
+                tela = criaTela(nColuna, nLinha);
+                novaMatPontos = ndcToViewport(matPontos, numPontos);
+                desenhaPoligono(tela, novaMatPontos, numPontos); 
+                imprimeTela(tela);
+            }
+
+            if(key_code == '-'){
+                for(int i = 0; i < numPontos; i++){
+                    escala(0.5, 0.5, &matPontos[i][0], &matPontos[i][1]);
+                }
+                system("clear");
+                tela = criaTela(nColuna, nLinha);
+                novaMatPontos = ndcToViewport(matPontos, numPontos);
+                desenhaPoligono(tela, novaMatPontos, numPontos); 
+                imprimeTela(tela);
+            }
+
+            if(key_code == 'd'){
+                for(int i = 0; i < numPontos; i++){
+                    translacao(0.2, 0.0, &matPontos[i][0], &matPontos[i][1]);
+                }
+                system("clear");
+                tela = criaTela(nColuna, nLinha);
+                novaMatPontos = ndcToViewport(matPontos, numPontos);
+                desenhaPoligono(tela, novaMatPontos, numPontos); 
+                imprimeTela(tela);
+            }
+
+            if(key_code == 'a'){
+                for(int i = 0; i < numPontos; i++){
+                    translacao(-0.2, 0.0, &matPontos[i][0], &matPontos[i][1]);
+                }
+                system("clear");
+                tela = criaTela(nColuna, nLinha);
+                novaMatPontos = ndcToViewport(matPontos, numPontos);
+                desenhaPoligono(tela, novaMatPontos, numPontos); 
+                imprimeTela(tela);
+            }
+
+            if(key_code == 's'){
+                for(int i = 0; i < numPontos; i++){
+                    translacao(0.0, -0.2, &matPontos[i][0], &matPontos[i][1]);
+                }
+                system("clear");
+                tela = criaTela(nColuna, nLinha);
+                novaMatPontos = ndcToViewport(matPontos, numPontos);
+                desenhaPoligono(tela, novaMatPontos, numPontos); 
+                imprimeTela(tela);
+            }
+
+            if(key_code == 'w'){
+                for(int i = 0; i < numPontos; i++){
+                    translacao(0.0, 0.2, &matPontos[i][0], &matPontos[i][1]);
+                }
+                system("clear");
+                tela = criaTela(nColuna, nLinha);
+                novaMatPontos = ndcToViewport(matPontos, numPontos);
+                desenhaPoligono(tela, novaMatPontos, numPontos); 
+                imprimeTela(tela);
+            }
+        }
+    }else{
+        printf("Frame não aceito\n");
+    }
     return 0;
 }
 
@@ -55,6 +141,7 @@ void desenhaPoligono(int** tela, int** mat, int numPontos){
     int dx;
     int dy;
     int D;
+
     for(int i = 0; i < numPontos; i++){
         int dir = 1;
         int i2 = (i+1) % numPontos;
@@ -81,7 +168,7 @@ void desenhaPoligono(int** tela, int** mat, int numPontos){
             D = 2*dy - dx;
             
             if(dy < 0){
-                dir = - 1;
+                dir = -1;
                 dy = dy * -1;
             }
             
