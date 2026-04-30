@@ -1,7 +1,7 @@
 all: compila
 
 compila: main.o transformacoes.o
-	gcc main.o transformacoes.o -o prog
+	gcc main.o transformacoes.o -o prog -lm
 
 main.o: main.c
 	gcc -c main.c
