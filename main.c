@@ -6,19 +6,18 @@
 
 int main(){
     Poligono p;
-    //Poligono p2;
-    //A casaNDC.dcg não funciona, dá falha de segmentação e eu sei o motivo, a tela é pequena demais
-    // pra casa, não tem erro na conta, confia 
+    Poligono p2;
     p.coordenadasFloat = carregarPontos("trianguloNDC.dcg", &p.numPontos);
     p.coordenadasInteiras = ndcToViewport(p.coordenadasFloat, p.numPontos);
     
-    //p2.coordenadasFloat = carregarPontos("estrelaNDC.dcg", &p.numPontos);
-    //p2.coordenadasInteiras = ndcToViewport(p.coordenadasFloat, p.numPontos);
+    p2.coordenadasFloat = carregarPontos("estrelaNDC.dcg", &p2.numPontos);
+    p2.coordenadasInteiras = ndcToViewport(p2.coordenadasFloat, p2.numPontos);
+
     int **tela;
 
     tela = criaTela(WIDTH, HEIGHT);
     desenhaPoligono(tela, p.coordenadasInteiras, p.numPontos);  
-    //desenhaPoligono(tela, p2.coordenadasInteiras, p2.numPontos);  
+    desenhaPoligono(tela, p2.coordenadasInteiras, p2.numPontos);  
 
     imprimeTela(tela);
     if(tela != NULL){
@@ -93,7 +92,7 @@ int main(){
 
             if(key_code == 'e'){
                 for(int i = 0; i < p.numPontos; i++){
-                    rotacao(10, &p.coordenadasFloat[i][0], &p.coordenadasFloat[i][1]);
+                    rotacao(30, &p.coordenadasFloat[i][0], &p.coordenadasFloat[i][1]);
                 }
                 system("clear");
                 tela = criaTela(WIDTH, HEIGHT);
@@ -101,6 +100,20 @@ int main(){
                 desenhaPoligono(tela, p.coordenadasInteiras, p.numPontos); 
                 imprimeTela(tela);
             }
+
+            if(key_code == 'q'){
+                for(int i = 0; i < p.numPontos; i++){
+                    rotacao(-30, &p.coordenadasFloat[i][0], &p.coordenadasFloat[i][1]);
+                }
+                system("clear");
+                tela = criaTela(WIDTH, HEIGHT);
+                p.coordenadasInteiras = ndcToViewport(p.coordenadasFloat, p.numPontos);
+                desenhaPoligono(tela, p.coordenadasInteiras, p.numPontos); 
+                imprimeTela(tela);
+            }
+
+            desenhaPoligono(tela, p2.coordenadasInteiras, p2.numPontos);  
+            imprimeTela(tela);
         }
     }else{
         printf("Frame não aceito\n");
@@ -163,4 +176,5 @@ int **criaTela(int larg, int alt){
   }
   return tela;
 }
+
 
