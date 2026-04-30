@@ -6,8 +6,8 @@ void rotacao(float anguloRotacao, float *x, float *y){
     float coseno, seno;
     coseno = cosf(anguloRotacao);
     seno = sinf(anguloRotacao);
-    *x = *x * coseno - (*y * seno);
     *y = *y*coseno + (*x * seno);
+    *x = *x * coseno - (*y * seno);
 }
 
 void translacao(float transX, float transY, float *x, float *y){
@@ -56,8 +56,12 @@ void desenhaPoligono(int** tela, int** mat, int numPontos){
             }
             
             int y = y0;
+
             for(int x = x0; x <= x1; x++){
-                if(x>=0 && x<= WIDTH && y>=0 && y<= HEIGHT) tela[y][x] = 1;
+                int wx = ((x % WIDTH)  + WIDTH)  % WIDTH;
+                int wy = ((y % HEIGHT) + HEIGHT) % HEIGHT;
+                tela[wy][wx] = 1;
+
                 if(D > 0){
                     y = y + dir;
                     D += 2 * (dy - dx);
@@ -87,8 +91,12 @@ void desenhaPoligono(int** tela, int** mat, int numPontos){
             }
 
             int x = x0;
+
             for(int y = y0; y <= y1; y++){
-                if(x>=0 && x<= WIDTH && y>=0 && y<= HEIGHT) tela[y][x] = 1;
+                int wx = ((x % WIDTH)  + WIDTH)  % WIDTH;
+                int wy = ((y % HEIGHT) + HEIGHT) % HEIGHT;
+                tela[wy][wx] = 1;
+
                 if(D > 0){
                     x = x + dir;
                     D += 2 * (dx - dy);
