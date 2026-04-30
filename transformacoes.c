@@ -3,11 +3,14 @@
 #include "main.h"
 
 void rotacao(float anguloRotacao, float *x, float *y){
-    float coseno, seno;
-    coseno = cosf(anguloRotacao);
-    seno = sinf(anguloRotacao);
-    *y = *y*coseno + (*x * seno);
-    *x = *x * coseno - (*y * seno);
+    float coseno, seno, x2, y2;
+    float radiano = anguloRotacao * (3.14 / 180.0);
+    coseno = cosf(radiano);
+    seno = sinf(radiano);
+    y2 = *y*coseno + (*x * seno);
+    x2 = *x * coseno - (*y * seno);
+    *x = x2;
+    *y = y2;
 }
 
 void translacao(float transX, float transY, float *x, float *y){
