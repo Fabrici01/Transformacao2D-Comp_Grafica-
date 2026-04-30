@@ -1,7 +1,32 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <termios.h>
+#include <unistd.h>
 #include "main.h"
 #include "transformacoes.h"
+
+void enableRawMode(){
+    struct termios t;
+    tcgetattr(STDIN_FILENO, &t);
+    t.c_lflag &= ~(ICANON | ECHO);
+    tcsetattr(STDIN_FILENO, TCSANOW, &t);
+}
+
+void disableRawMode(){
+    struct termios t;
+    tcgetattr(STDIN_FILENO, &t);
+    t.c_lflag |= (ICANON | ECHO);
+    tcsetattr(STDIN_FILENO, TCSANOW, &t);
+}
+
+char getch(){
+    char c;
+    enableRawMode();
+    c = getchar();
+    disableRawMode();
+    return c;
+}
+
 
 
 int main(){
@@ -23,7 +48,7 @@ int main(){
     if(tela != NULL){
         while (1){
             char key_code;
-            key_code = getchar();
+            key_code = getch();
             if(key_code == '+'){
                 for(int i = 0; i < p.numPontos; i++){
                     escala(1.5, 1.5, &p.coordenadasFloat[i][0], &p.coordenadasFloat[i][1]);
@@ -111,7 +136,7 @@ int main(){
                 desenhaPoligono(tela, p.coordenadasInteiras, p.numPontos); 
                 imprimeTela(tela);
             }
-
+            system("clear");
             desenhaPoligono(tela, p2.coordenadasInteiras, p2.numPontos);  
             imprimeTela(tela);
         }
@@ -176,5 +201,4 @@ int **criaTela(int larg, int alt){
   }
   return tela;
 }
-
 
