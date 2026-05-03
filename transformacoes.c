@@ -1,6 +1,60 @@
 #include <math.h>
 #include <stdlib.h>
 #include "main.h"
+#include "transformacoes.h"
+
+void transformacaoHomogenia(Poligono* p, Transformacao* t){
+
+    //Matriz Escala
+    Matriz3* escala = (Matriz3*) calloc(1, sizeof(Matriz3));
+    escala->matriz[0][0] = t->escalaX;
+    escala->matriz[1][1] = t->escalaY;
+    escala->matriz[2][2] = 1;
+
+    //Matriz Translação
+    Matriz3* translacao = (Matriz3*) calloc(1, sizeof(Matriz3));
+    translacao->matriz[0][0] = 1;
+    translacao->matriz[1][1] = 1;
+    translacao->matriz[2][2] = 1;
+    translacao->matriz[2][0] = t->transladarX;
+    translacao->matriz[2][1] = t->transladarY;
+
+    //Matriz Rotação
+    Matriz3* rotacao = (Matriz3*) calloc(1, sizeof(Matriz3));
+    float radiano = t->angulo * (3.14 / 180.0);
+    float cos = cosf(radiano);
+    float sen = sinf(radiano);
+    rotacao->matriz[0][0] = cos;
+    rotacao->matriz[0][1] = sen;
+    rotacao->matriz[1][0] = sen * -1.0;
+    rotacao->matriz[1][1] = cos;
+    rotacao->matriz[2][2] = 1;
+
+    //Multiplicação das Matrizes
+    Matriz3* temp1 = multiplicaMatriz(translacao,escala);
+    Matriz3* matrizTransformacao = multiplicaMatriz(rotacao,temp1);
+
+    float vetPonto[3];
+    for(int x=0; x<p->numPontos; x++){
+        /*vetPonto[0] = p->coordenadasFloat[x][0] * matrizTransformacao->matriz[0][0] + p->coordenadasFloat[x][1] * matrizTransformacao->matriz[0][1] + matrizTransformacao->matriz[0][2];
+        vetPonto[1] = p->coordenadasFloat[x][0] * matrizTransformacao->matriz[1][0] + p->coordenadasFloat[x][1] * matrizTransformacao->matriz[1][1] + matrizTransformacao->matriz[1][2];
+        */
+        vetPonto[0] = p->coordenadasFloat[x][0] * matrizTransformacao->matriz[0][0]
+            + p->coordenadasFloat[x][1] * matrizTransformacao->matriz[1][0]   // linha 1, coluna 0
+            + matrizTransformacao->matriz[2][0];                              // linha 2, coluna 0
+        vetPonto[1] = p->coordenadasFloat[x][0] * matrizTransformacao->matriz[0][1]
+            + p->coordenadasFloat[x][1] * matrizTransformacao->matriz[1][1]   // linha 1, coluna 1
+            + matrizTransformacao->matriz[2][1];                              // linha 2, coluna 1
+        p->coordenadasFloat[x][0] = vetPonto[0];
+        p->coordenadasFloat[x][1] = vetPonto[1];
+    }
+
+    free(escala);
+    free(translacao);
+    free(rotacao);
+    free(temp1);
+    free(matrizTransformacao);
+}
 
 void rotacao(float anguloRotacao, float *x, float *y){
     float coseno, seno, x2, y2;
