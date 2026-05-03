@@ -1,11 +1,11 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include <termios.h>
+//#include <termios.h>
 #include <unistd.h>
 #include "main.h"
 #include "transformacoes.h"
 
-void enableRawMode(){
+/*void enableRawMode(){
     struct termios t;
     tcgetattr(STDIN_FILENO, &t);
     t.c_lflag &= ~(ICANON | ECHO);
@@ -25,7 +25,7 @@ char getch(){
     c = getchar();
     disableRawMode();
     return c;
-}
+}*/
 
 
 
@@ -48,7 +48,7 @@ int main(){
     if(tela != NULL){
         while (1){
             char key_code;
-            key_code = getch();
+            key_code = getchar();
             if(key_code == '+'){
                 for(int i = 0; i < p.numPontos; i++){
                     escala(1.5, 1.5, &p.coordenadasFloat[i][0], &p.coordenadasFloat[i][1]);
