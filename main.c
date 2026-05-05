@@ -9,7 +9,7 @@ int main(){
     Poligono p2;
     Transformacao t;
     
-    p.coordenadasFloat = carregarPontos("trianguloNDC.dcg", &p.numPontos);
+    p.coordenadasFloat = carregarPontos("coracaoNDC.dcg", &p.numPontos);
     
     p2.coordenadasFloat = carregarPontos("estrelaNDC.dcg", &p2.numPontos);
 
