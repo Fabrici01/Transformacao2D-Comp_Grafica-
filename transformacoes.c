@@ -35,16 +35,18 @@ void transformacaoHomogenia(Poligono* p, Transformacao* t){
     Matriz3* matrizTransformacao = multiplicaMatriz(rotacao,temp1);
 
     float vetPonto[3];
-    for(int x=0; x<p->numPontos; x++){
+    for(int x = 0; x < p->numPontos; x++){
         /*vetPonto[0] = p->coordenadasFloat[x][0] * matrizTransformacao->matriz[0][0] + p->coordenadasFloat[x][1] * matrizTransformacao->matriz[0][1] + matrizTransformacao->matriz[0][2];
         vetPonto[1] = p->coordenadasFloat[x][0] * matrizTransformacao->matriz[1][0] + p->coordenadasFloat[x][1] * matrizTransformacao->matriz[1][1] + matrizTransformacao->matriz[1][2];
         */
         vetPonto[0] = p->coordenadasFloat[x][0] * matrizTransformacao->matriz[0][0]
             + p->coordenadasFloat[x][1] * matrizTransformacao->matriz[1][0]   // linha 1, coluna 0
-            + matrizTransformacao->matriz[2][0];                              // linha 2, coluna 0
+            + matrizTransformacao->matriz[2][0];                             // linha 2, coluna 0
+        
         vetPonto[1] = p->coordenadasFloat[x][0] * matrizTransformacao->matriz[0][1]
             + p->coordenadasFloat[x][1] * matrizTransformacao->matriz[1][1]   // linha 1, coluna 1
-            + matrizTransformacao->matriz[2][1];                              // linha 2, coluna 1
+            + matrizTransformacao->matriz[2][1];                             // linha 2, coluna 1
+        
         p->coordenadasFloat[x][0] = vetPonto[0];
         p->coordenadasFloat[x][1] = vetPonto[1];
     }
@@ -68,8 +70,8 @@ void rotacao(float anguloRotacao, float *x, float *y){
 }
 
 void translacao(float transX, float transY, float *x, float *y){
-    *x +=transX;
-    *y +=transY; 
+    *x += transX;
+    *y += transY; 
 }
 
 void escala(float multX, float multY, float *x, float *y){
