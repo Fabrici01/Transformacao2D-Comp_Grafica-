@@ -1,11 +1,11 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include <termios.h>
+//#include <termios.h>
 #include <unistd.h>
 #include "main.h"
 #include "transformacoes.h"
 
-void enableRawMode(){
+/*void enableRawMode(){
     struct termios t;
     tcgetattr(STDIN_FILENO, &t);
     t.c_lflag &= ~(ICANON | ECHO);
@@ -25,125 +25,189 @@ char getch(){
     c = getchar();
     disableRawMode();
     return c;
-}
+}*/
 
 
 
 int main(){
     Poligono p;
-    Poligono p2;
+    //Poligono p2;
     p.coordenadasFloat = carregarPontos("trianguloNDC.dcg", &p.numPontos);
     p.coordenadasInteiras = ndcToViewport(p.coordenadasFloat, p.numPontos);
     
-    p2.coordenadasFloat = carregarPontos("estrelaNDC.dcg", &p2.numPontos);
-    p2.coordenadasInteiras = ndcToViewport(p2.coordenadasFloat, p2.numPontos);
+    /*p2.coordenadasFloat = carregarPontos("estrelaNDC.dcg", &p2.numPontos);
+    p2.coordenadasInteiras = ndcToViewport(p2.coordenadasFloat, p2.numPontos);*/
+    Transformacao t;
+
+    int modo;
+    printf("Escolha o modo de Edicao:\n");
+    printf("1- Transformacoes tradicionais\n");
+    printf("2- Transformacoes Homogeneas\n");
+    printf("Escolha: ");
+    scanf("%i", &modo);
 
     int **tela;
-
     tela = criaTela(WIDTH, HEIGHT);
-    desenhaPoligono(tela, p.coordenadasInteiras, p.numPontos);  
-    desenhaPoligono(tela, p2.coordenadasInteiras, p2.numPontos);  
-
+    desenhaPoligono(tela, p.coordenadasInteiras, p.numPontos); 
     imprimeTela(tela);
-    if(tela != NULL){
-        while (1){
-            char key_code;
-            key_code = getch();
-            if(key_code == '+'){
-                for(int i = 0; i < p.numPontos; i++){
-                    escala(1.5, 1.5, &p.coordenadasFloat[i][0], &p.coordenadasFloat[i][1]);
+    switch(modo){
+        case 1:
+            if(tela != NULL){
+            while (1){
+                char key_code;
+                key_code = getchar();
+                if(key_code == '+'){
+                    for(int i = 0; i < p.numPontos; i++){
+                        escala(1.5, 1.5, &p.coordenadasFloat[i][0], &p.coordenadasFloat[i][1]);
+                    }
+                    system("clear");
+                    tela = criaTela(WIDTH, HEIGHT);
+                    p.coordenadasInteiras = ndcToViewport(p.coordenadasFloat, p.numPontos);
+                    desenhaPoligono(tela, p.coordenadasInteiras, p.numPontos); 
+                    imprimeTela(tela);
                 }
-                system("clear");
-                tela = criaTela(WIDTH, HEIGHT);
-                p.coordenadasInteiras = ndcToViewport(p.coordenadasFloat, p.numPontos);
-                desenhaPoligono(tela, p.coordenadasInteiras, p.numPontos); 
-                imprimeTela(tela);
-            }
 
-            if(key_code == '-'){
-                for(int i = 0; i < p.numPontos; i++){
-                    escala(0.5, 0.5, &p.coordenadasFloat[i][0], &p.coordenadasFloat[i][1]);
+                if(key_code == '-'){
+                    for(int i = 0; i < p.numPontos; i++){
+                        escala(0.5, 0.5, &p.coordenadasFloat[i][0], &p.coordenadasFloat[i][1]);
+                    }
+                    system("clear");
+                    tela = criaTela(WIDTH, HEIGHT);
+                    p.coordenadasInteiras = ndcToViewport(p.coordenadasFloat, p.numPontos);
+                    desenhaPoligono(tela, p.coordenadasInteiras, p.numPontos); 
+                    imprimeTela(tela);
                 }
-                system("clear");
-                tela = criaTela(WIDTH, HEIGHT);
-                p.coordenadasInteiras = ndcToViewport(p.coordenadasFloat, p.numPontos);
-                desenhaPoligono(tela, p.coordenadasInteiras, p.numPontos); 
-                imprimeTela(tela);
-            }
 
-            if(key_code == 'd'){
-                for(int i = 0; i < p.numPontos; i++){
-                    translacao(0.2, 0.0, &p.coordenadasFloat[i][0], &p.coordenadasFloat[i][1]);
+                if(key_code == 'd'){
+                    for(int i = 0; i < p.numPontos; i++){
+                        translacao(0.2, 0.0, &p.coordenadasFloat[i][0], &p.coordenadasFloat[i][1]);
+                    }
+                    system("clear");
+                    tela = criaTela(WIDTH, HEIGHT);
+                    p.coordenadasInteiras = ndcToViewport(p.coordenadasFloat, p.numPontos);
+                    desenhaPoligono(tela, p.coordenadasInteiras, p.numPontos); 
+                    imprimeTela(tela);
                 }
-                system("clear");
-                tela = criaTela(WIDTH, HEIGHT);
-                p.coordenadasInteiras = ndcToViewport(p.coordenadasFloat, p.numPontos);
-                desenhaPoligono(tela, p.coordenadasInteiras, p.numPontos); 
-                imprimeTela(tela);
-            }
 
-            if(key_code == 'a'){
-                for(int i = 0; i < p.numPontos; i++){
-                    translacao(-0.2, 0.0, &p.coordenadasFloat[i][0], &p.coordenadasFloat[i][1]);
+                if(key_code == 'a'){
+                    for(int i = 0; i < p.numPontos; i++){
+                        translacao(-0.2, 0.0, &p.coordenadasFloat[i][0], &p.coordenadasFloat[i][1]);
+                    }
+                    system("clear");
+                    tela = criaTela(WIDTH, HEIGHT);
+                    p.coordenadasInteiras = ndcToViewport(p.coordenadasFloat, p.numPontos);
+                    desenhaPoligono(tela, p.coordenadasInteiras, p.numPontos); 
+                    imprimeTela(tela);
                 }
-                system("clear");
-                tela = criaTela(WIDTH, HEIGHT);
-                p.coordenadasInteiras = ndcToViewport(p.coordenadasFloat, p.numPontos);
-                desenhaPoligono(tela, p.coordenadasInteiras, p.numPontos); 
-                imprimeTela(tela);
-            }
 
-            if(key_code == 's'){
-                for(int i = 0; i < p.numPontos; i++){
-                    translacao(0.0, -0.2, &p.coordenadasFloat[i][0], &p.coordenadasFloat[i][1]);
+                if(key_code == 's'){
+                    for(int i = 0; i < p.numPontos; i++){
+                        translacao(0.0, -0.2, &p.coordenadasFloat[i][0], &p.coordenadasFloat[i][1]);
+                    }
+                    system("clear");
+                    tela = criaTela(WIDTH, HEIGHT);
+                    p.coordenadasInteiras = ndcToViewport(p.coordenadasFloat, p.numPontos);
+                    desenhaPoligono(tela, p.coordenadasInteiras, p.numPontos); 
+                    imprimeTela(tela);
                 }
-                system("clear");
-                tela = criaTela(WIDTH, HEIGHT);
-                p.coordenadasInteiras = ndcToViewport(p.coordenadasFloat, p.numPontos);
-                desenhaPoligono(tela, p.coordenadasInteiras, p.numPontos); 
-                imprimeTela(tela);
-            }
 
-            if(key_code == 'w'){
-                for(int i = 0; i < p.numPontos; i++){
-                    translacao(0.0, 0.2, &p.coordenadasFloat[i][0], &p.coordenadasFloat[i][1]);
+                if(key_code == 'w'){
+                    for(int i = 0; i < p.numPontos; i++){
+                        translacao(0.0, 0.2, &p.coordenadasFloat[i][0], &p.coordenadasFloat[i][1]);
+                    }
+                    system("clear");
+                    tela = criaTela(WIDTH, HEIGHT);
+                    p.coordenadasInteiras = ndcToViewport(p.coordenadasFloat, p.numPontos);
+                    desenhaPoligono(tela, p.coordenadasInteiras, p.numPontos); 
+                    imprimeTela(tela);
                 }
-                system("clear");
-                tela = criaTela(WIDTH, HEIGHT);
-                p.coordenadasInteiras = ndcToViewport(p.coordenadasFloat, p.numPontos);
-                desenhaPoligono(tela, p.coordenadasInteiras, p.numPontos); 
-                imprimeTela(tela);
-            }
 
-            if(key_code == 'e'){
-                for(int i = 0; i < p.numPontos; i++){
-                    rotacao(30, &p.coordenadasFloat[i][0], &p.coordenadasFloat[i][1]);
+                if(key_code == 'e'){
+                    for(int i = 0; i < p.numPontos; i++){
+                        rotacao(30, &p.coordenadasFloat[i][0], &p.coordenadasFloat[i][1]);
+                    }
+                    system("clear");
+                    tela = criaTela(WIDTH, HEIGHT);
+                    p.coordenadasInteiras = ndcToViewport(p.coordenadasFloat, p.numPontos);
+                    desenhaPoligono(tela, p.coordenadasInteiras, p.numPontos); 
+                    imprimeTela(tela);
                 }
-                system("clear");
-                tela = criaTela(WIDTH, HEIGHT);
-                p.coordenadasInteiras = ndcToViewport(p.coordenadasFloat, p.numPontos);
-                desenhaPoligono(tela, p.coordenadasInteiras, p.numPontos); 
-                imprimeTela(tela);
-            }
 
-            if(key_code == 'q'){
-                for(int i = 0; i < p.numPontos; i++){
-                    rotacao(-30, &p.coordenadasFloat[i][0], &p.coordenadasFloat[i][1]);
+                if(key_code == 'q'){
+                    for(int i = 0; i < p.numPontos; i++){
+                        rotacao(-30, &p.coordenadasFloat[i][0], &p.coordenadasFloat[i][1]);
+                    }
+                    system("clear");
+                    tela = criaTela(WIDTH, HEIGHT);
+                    p.coordenadasInteiras = ndcToViewport(p.coordenadasFloat, p.numPontos);
+                    desenhaPoligono(tela, p.coordenadasInteiras, p.numPontos); 
+                    imprimeTela(tela);
                 }
                 system("clear");
-                tela = criaTela(WIDTH, HEIGHT);
-                p.coordenadasInteiras = ndcToViewport(p.coordenadasFloat, p.numPontos);
-                desenhaPoligono(tela, p.coordenadasInteiras, p.numPontos); 
+                //desenhaPoligono(tela, p2.coordenadasInteiras, p2.numPontos);  
                 imprimeTela(tela);
             }
-            system("clear");
-            desenhaPoligono(tela, p2.coordenadasInteiras, p2.numPontos);  
-            imprimeTela(tela);
+        }else{
+            printf("Frame não aceito\n");
         }
-    }else{
-        printf("Frame não aceito\n");
+        break;
+        case 2:
+            if(tela != NULL){
+                while (1){
+                    printf("--- Configuracao ---\n");
+                    printf("Escala X: ");
+                    scanf("%f", &t.escalaX);
+                    printf("\nEscala Y: ");
+                    scanf("%f", &t.escalaY);
+                    printf("\nTransladar X: ");
+                    scanf("%f", &t.transladarX);
+                    printf("\nTransladar Y: ");
+                    scanf("%f", &t.transladarY);
+                    printf("\nRotacionar: ");
+                    scanf("%f", &t.angulo);
+
+                    printf("teste1\n");
+                    transformacaoHomogenia(&p, &t);
+                    printf("teste2\n");
+                    tela = criaTela(WIDTH, HEIGHT);
+                    p.coordenadasInteiras = ndcToViewport(p.coordenadasFloat, p.numPontos);
+                    desenhaPoligono(tela, p.coordenadasInteiras, p.numPontos); 
+                    imprimeTela(tela);
+                }
+            }
+
+        break;
+        default:
+        printf("Valor inválido!\n");
+        break;
     }
+
+
+     
+    //desenhaPoligono(tela, p2.coordenadasInteiras, p2.numPontos);  
+
+    
+    
     return 0;
+}
+
+Matriz3* multiplicaMatriz(Matriz3* a, Matriz3* b){
+    Matriz3* matrizFinal = (Matriz3*) calloc(1,sizeof(Matriz3));
+    float temp;
+
+    for(int x=0; x<3; x++){
+        for(int y=0; y<3; y++){
+            temp = 0;
+
+            for(int z=0; z<3; z++){
+                temp += a->matriz[x][z] * b->matriz[z][y];
+            }
+            
+            matrizFinal->matriz[x][y] = temp;
+        }
+    }
+
+    return matrizFinal;
 }
 
 int** ndcToViewport(float** matPontos, int numPontos){
